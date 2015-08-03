@@ -52,12 +52,12 @@ if ! check_packages docker.io jenkins; then
 
     echo "Install dependencies."
     apt-get install -qq docker.io jenkins
+
+    echo "Add user to docker group"
+    usermod -aG docker $SUDO_USER
 else
     echo "Dependencies are already installed."
 fi
-
-echo "Add user to docker group"
-usermod -aG docker $SUDO_USER
 
 echo "Setting systemd config."
 cat > /etc/systemd/system/gitlab-docker.service << EOF
