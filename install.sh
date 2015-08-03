@@ -130,9 +130,11 @@ EOF
 systemctl enable jenkins gitlab-docker docker-registry
 systemctl start jenkins gitlab-docker docker-registry
 
-pushd /tmp/
 echo "Installing jenkins plugins."
-wget -qO jenkins-cli.jar http://localhost:8080/jnlpJars/jenkins-cli.jar
-
-java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin git gitlab-plugin docker-build-publish
-popd
+until wget -qO /dev/null http://localhost:8080/; do
+    echo "Waiting..."
+    sleep 5
+done
+wget -qO /tmp/jenkins-cli.jar http://localhost:8080/jnlpJars/jenkins-cli.jar
+java -jar /tmp/jenkins-cli.jar -s http://localhost:8080/ install-plugin git gitlab-plugin docker-build-publish
+rm /tmp/jenkins-cli.jar
