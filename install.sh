@@ -100,5 +100,9 @@ ExecStop=/usr/bin/docker stop docker-registry
 WantedBy=local.target
 EOF
 
+echo "Fix jenkins permission"
+mkdir -p /srv/jenkins
+chown -R 1000:1000 /srv/jenkins
+
 systemctl enable gitlab-docker jenkins-docker docker-registry
 systemctl start gitlab-docker jenkins-docker docker-registry
