@@ -15,7 +15,7 @@ fi
 
 check_packages() {
     for prg in $*; do
-        hash $prg 2>/dev/null || return 1
+        dpkg -s $prg &>/dev/null || return $?
     done
 
     return 0
@@ -42,7 +42,7 @@ get_private_ip() {
     return 1
 }
 
-if ! check_packages docker; then
+if ! check_packages docker.io; then
     echo "Update repository."
     apt-get update -qq
 
