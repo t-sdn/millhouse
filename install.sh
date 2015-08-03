@@ -21,6 +21,27 @@ check_packages() {
     return 0
 }
 
+get_private_ip() {
+    ips=$(ifconfig | awk '/inet addr/{print substr($2,6)}')
+    for ip in $ips; do
+        if [ $ip == '10.*.*.*' ]; then
+            echo $ip
+            return 0
+        elif [ $ip == '192.168.*.*' ]; then
+            echo $ip
+            return 0
+        elif [ $ip == '172.*.*.*' ]; then
+            second_field=$(cut -d. -f2 <<< $ip)
+            if [ $second_field -ge 16 -a $second_field -le 31 ]; then
+                echo $ip
+                return 0
+            fi
+        fi
+    done
+
+    return 1
+}
+
 if ! check_packages docker; then
     echo "Update repository."
     apt-get update -qq
@@ -79,6 +100,8 @@ ExecStop=/usr/bin/docker stop jenkins-ci
 WantedBy=local.target
 EOF
 
+bind_ip=$(get_private_ip || echo '0.0.0.0')
+
 cat > /etc/systemd/system/docker-registry.service << EOF
 [Unit]
 Description=Private docker registry.
@@ -92,7 +115,7 @@ ExecStartPre=-/usr/bin/docker rm docker-registry
 ExecStart=/usr/bin/docker run --rm \
           --name docker-registry \
           --volume /srv/registry:/tmp/registry \
-          --publish 192.168.0.10:5000:5000 \
+          --publish $bind_ip:5000:5000 \
           registry
 ExecStop=/usr/bin/docker stop docker-registry
 
