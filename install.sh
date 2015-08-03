@@ -42,12 +42,16 @@ get_private_ip() {
     return 1
 }
 
-if ! check_packages docker.io; then
+if ! check_packages docker.io jenkins; then
+    echo "Add jenkins repository."
+    wget -qO- https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
+    echo 'deb http://pkg.jenkins-ci.org/debian binary/' > /etc/apt/sources.list.d/jenkins.list
+
     echo "Update repository."
     apt-get update -qq
 
-    echo "Install docker."
-    apt-get install -qq docker.io
+    echo "Install dependencies."
+    apt-get install -qq docker.io jenkins
 else
     echo "Dependencies are already installed."
 fi
@@ -123,9 +127,5 @@ ExecStop=/usr/bin/docker stop docker-registry
 WantedBy=local.target
 EOF
 
-echo "Fix jenkins permission"
-mkdir -p /srv/jenkins
-chown -R 1000:1000 /srv/jenkins
-
-systemctl enable gitlab-docker jenkins-docker docker-registry
-systemctl start gitlab-docker jenkins-docker docker-registry
+systemctl enable jenkins gitlab-docker docker-registry
+systemctl start jenkins gitlab-docker docker-registry
