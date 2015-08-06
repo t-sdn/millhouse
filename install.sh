@@ -21,49 +21,24 @@ check_packages() {
     return 0
 }
 
-if ! check_packages docker.io jenkins; then
+if ! check_packages openssh-server gitlab-ce jenkins; then
     echo "Add jenkins repository."
     wget -qO- https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
     echo 'deb http://pkg.jenkins-ci.org/debian binary/' > /etc/apt/sources.list.d/jenkins.list
+
+    echo "Install GitLab."
+    curl -Lso /tmp/gitlab-ce.deb https://packages.gitlab.com/gitlab/gitlab-ce/packages/debian/wheezy/gitlab-ce_7.13.3-ce.1_amd64.deb/download
+    dpkg -i /tmp/gitlab-ce.deb
+    gitlab-ctl reconfigure
 
     echo "Update repository."
     apt-get update -qq
 
     echo "Install dependencies."
-    apt-get install -qq docker.io jenkins
-
-    echo "Add user to docker group"
-    usermod -aG docker $SUDO_USER
+    apt-get install -qq jenkins openssh-server
 else
     echo "Dependencies are already installed."
 fi
-
-echo "Setting systemd config."
-cat > /etc/systemd/system/gitlab-docker.service << EOF
-[Unit]
-Description=Gitlab in docker.
-After=docker.service
-Requires=docker.service
-
-[Service]
-Restart=always
-ExecStartPre=-/usr/bin/docker pull gitlab/gitlab-ce
-ExecStartPre=-/usr/bin/docker rm gitlab-ce
-ExecStart=/usr/bin/docker run --rm \
-          --name gitlab-ce \
-          --volume /srv/gitlab/config:/etc/gitlab \
-          --volume /srv/gitlab/logs:/var/log/gitlab \
-          --volume /srv/gitlab/data:/var/opt/gitlab \
-          --publish 80:80 --publish 2222:22 \
-          gitlab/gitlab-ce
-ExecStop=/usr/bin/docker stop gitlab-ce
-
-[Install]
-WantedBy=local.target
-EOF
-
-systemctl enable jenkins gitlab-docker
-systemctl start jenkins gitlab-docker
 
 echo "Installing jenkins plugins."
 until wget -qO /dev/null http://localhost:8080/; do
