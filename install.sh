@@ -21,7 +21,7 @@ check_packages() {
     return 0
 }
 
-if ! check_packages openssh-server gitlab-ce jenkins; then
+if ! check_packages openssh-server postfix gitlab-ce jenkins; then
     echo "Add jenkins repository."
     wget -qO- https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
     echo 'deb http://pkg.jenkins-ci.org/debian binary/' > /etc/apt/sources.list.d/jenkins.list
@@ -35,7 +35,7 @@ if ! check_packages openssh-server gitlab-ce jenkins; then
     apt-get update -qq
 
     echo "Install dependencies."
-    apt-get install -qq jenkins openssh-server
+    DEBIAN_FRONTEND=nointeractive apt-get install -qq jenkins postfix openssh-server
 else
     echo "Dependencies are already installed."
 fi
