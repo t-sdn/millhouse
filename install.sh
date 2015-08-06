@@ -20,6 +20,12 @@ echo 'deb http://pkg.jenkins-ci.org/debian binary/' > /etc/apt/sources.list.d/je
 echo "Install GitLab."
 curl -Lso /tmp/gitlab-ce.deb https://packages.gitlab.com/gitlab/gitlab-ce/packages/debian/wheezy/gitlab-ce_7.13.3-ce.1_amd64.deb/download
 dpkg -i /tmp/gitlab-ce.deb
+
+echo "Setting GitLab."
+ip=$(curl ipv4.icanhazip.com)
+sed -e "s#^external_url .*#external_url 'http://$ip:10080'#" -i /etc/gitlab/gitlab.rb
+echo "gitlab_rails['gitlab_ssh_host'] = '$ip:10022'" >> /etc/gitlab/gitlab.rb
+
 gitlab-ctl reconfigure
 
 echo "Update repository."
