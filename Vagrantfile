@@ -11,8 +11,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 18080
 
   config.vm.provider "virtualbox" do |vbox|
-    vbox.memory = 1024
-    vbox.cpus = 2
+    vbox.memory = 4096
+    vbox.cpus = 4
   end
 
   config.vm.provision "shell", path: "./install.sh"
