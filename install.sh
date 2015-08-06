@@ -28,11 +28,13 @@ apt-get update -qq
 echo "Install dependencies."
 DEBIAN_FRONTEND=nointeractive apt-get install -qq jenkins postfix openssh-server
 
-echo "Installing jenkins plugins."
-until wget -qO /dev/null http://localhost:8080/; do
+echo "Setting jenkins."
+sed -e 's/HTTP_PORT=.*/HTTP_PORT=8888/' -i /etc/default/jenkins
+service jenkins restart
+until wget -qO /dev/null http://localhost:8888/; do
     echo "Waiting..."
     sleep 5
 done
-wget -qO /tmp/jenkins-cli.jar http://localhost:8080/jnlpJars/jenkins-cli.jar
-java -jar /tmp/jenkins-cli.jar -s http://localhost:8080/ install-plugin git gitlab-plugin docker-build-publish
+wget -qO /tmp/jenkins-cli.jar http://localhost:8888/jnlpJars/jenkins-cli.jar
+java -jar /tmp/jenkins-cli.jar -s http://localhost:8888/ install-plugin git gitlab-plugin docker-build-publish
 rm /tmp/jenkins-cli.jar

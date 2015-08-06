@@ -8,7 +8,7 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/vivid64"
   config.vm.network "forwarded_port", guest: 80, host: 10080
-  config.vm.network "forwarded_port", guest: 8080, host: 18080
+  config.vm.network "forwarded_port", guest: 8888, host: 18888
 
   config.vm.provider "virtualbox" do |vbox|
     vbox.memory = 4096
