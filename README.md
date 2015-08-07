@@ -20,7 +20,7 @@ $ vagrant up
 ### Shell script
 
 ```sh
-./install.sh
+$ ./install.sh
 ```
 
 
