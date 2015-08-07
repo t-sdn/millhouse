@@ -55,3 +55,19 @@ I installed _GitLab Plugin_ on Jenkins that makes GitLab think Jenkins as GitLab
 5. Click the _GitLab CI_.
 6. Click on _active_, Set random token, Set project url as Jenkins give
 (Project url is shown at _Build Triggers_ on Jenkins job configure).
+
+
+### Merge Request
+
+Normally you shouldn't push on master branch your WIP codes.
+Make branch for that feature, and merge onto master branch.
+But merge onto master yourself is not recommended. Use Merge Request for it.
+The project manager and other can see your progress on that branch,
+And the project manager can merge your codes onto master branch by clicking button on web page.
+
+
+### Managing issues
+
+You can reference issue on git commit message.
+\#issue\_number will be shown as link to the issue.
+And !MR\_number will be shown as link to the Merge Request.
