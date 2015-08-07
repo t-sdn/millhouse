@@ -13,6 +13,9 @@ if [ $EUID -ne 0 ]; then
     exit 0
 fi
 
+echo 'millhouse' > /etc/hostname
+hostname -F /etc/hostname
+
 echo "Add jenkins repository."
 wget -qO- https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
 echo 'deb http://pkg.jenkins-ci.org/debian binary/' > /etc/apt/sources.list.d/jenkins.list
