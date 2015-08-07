@@ -69,5 +69,5 @@ And the project manager can merge your codes onto master branch by clicking butt
 ### Managing issues
 
 You can reference issue on git commit message.
-\#issue\_number will be shown as link to the issue.
-And !MR\_number will be shown as link to the Merge Request.
+_\#issue\_number_ will be shown as link to the issue.
+And _!MR\_number_ will be shown as link to the Merge Request.
