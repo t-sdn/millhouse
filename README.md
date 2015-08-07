@@ -27,5 +27,5 @@ $ ./install.sh
 Usage
 -----
 
-You can browse GitLab on http://localhost:10080 and Jenkins CI on http://localhost:8888.
+You can browse GitLab on http://localhost:10080 and Jenkins CI on http://localhost:18888.
 GitLab's default root password is "5iveL!fe". You should change this at the first login.
