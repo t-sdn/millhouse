@@ -35,7 +35,7 @@ echo "Update repository."
 apt-get update -qq
 
 echo "Install dependencies."
-DEBIAN_FRONTEND=nointeractive apt-get install -qq jenkins postfix openssh-server
+DEBIAN_FRONTEND=nointeractive apt-get install -qq jenkins postfix openssh-server nis rpcbind
 
 echo "Setting jenkins."
 sed -e 's/HTTP_PORT=.*/HTTP_PORT=8888/' -i /etc/default/jenkins
@@ -47,3 +47,10 @@ done
 wget -qO /tmp/jenkins-cli.jar http://localhost:8888/jnlpJars/jenkins-cli.jar
 java -jar /tmp/jenkins-cli.jar -s http://localhost:8888/ install-plugin git gitlab-plugin docker-build-publish
 rm /tmp/jenkins-cli.jar
+
+echo "Setting NIS."
+sed -e 's/^NISSERVER=.*/NISSERVER=master/' -e 's/^NISCLIENT=.*/NISCLIENT=false/' -i /etc/default/nis
+
+sudo service rpcbind restart
+sudo service nis restart
+/usr/lib/yp/ypinit -m < /dev/null
