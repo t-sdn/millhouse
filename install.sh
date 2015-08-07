@@ -28,6 +28,7 @@ echo "Setting GitLab."
 ip=$(curl ipv4.icanhazip.com)
 sed -e "s#^external_url .*#external_url 'http://$ip:10080'#" -i /etc/gitlab/gitlab.rb
 echo "gitlab_rails['gitlab_ssh_host'] = '$ip:10022'" >> /etc/gitlab/gitlab.rb
+echo "ci_external_url 'http://$ip:18181'" >> /etc/gitlab/gitlab.rb
 
 gitlab-ctl reconfigure
 
