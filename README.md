@@ -10,16 +10,10 @@ Installation
 Installation is very simple. with Vagrant or shell script.
 
 
-### Vagrant
-
 ```sh
+# Using vagrant
 $ vagrant up
-```
-
-
-### Shell script
-
-```sh
+# Or using shell script
 $ ./install.sh
 ```
 
