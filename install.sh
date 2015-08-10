@@ -32,7 +32,30 @@ echo "Update repository."
 apt-get update -qq
 
 echo "Install dependencies."
-DEBIAN_FRONTEND=nointeractive apt-get install -qq postfix openssh-server nis rpcbind
+DEBIAN_FRONTEND=nointeractive apt-get install -qq docker.io postfix openssh-server nis rpcbind
+
+echo "Setting GitLabCI service."
+cat > /etc/systemd/system/gitlab-ci-docker.service << EOF
+[Unit]
+Description=GitlabCI runner in docker
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+ExecStartPre=-/usr/bin/docker rm gitlab-runner
+ExecStart=/usr/bin/docker run --rm \
+    --name gitlab-runner \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    --volume /srv/gitlab-runner:/etc/gitlab-runner \
+    gitlab/gitlab-runner
+ExecStop=/usr/bin/docker stop gitlab-runner
+
+[Install]
+WantedBy=local.target
+EOF
+
+systemctl start gitlab-ci-docker.service
 
 echo "Setting NIS."
 sed -e 's/^NISSERVER=.*/NISSERVER=master/' -e 's/^NISCLIENT=.*/NISCLIENT=false/' -i /etc/default/nis
