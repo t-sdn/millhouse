@@ -26,8 +26,8 @@ $ ./install.sh
 
 ### GitLab CI runner
 
-You have to enter GitLab CI token on GitLab CI runner
-GitLab CI web console is at http://localhost:18181/
+You have to enter GitLab CI token on GitLab CI runner.
+GitLab CI web console is at _http://localhost:18181/_.
 
 1. Copy GitLab CI token on _Admin_ -> _Runners_.
 2. Run this command on terminal
