@@ -9,7 +9,6 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/vivid64"
   config.vm.network "forwarded_port", guest: 10080, host: 10080
   config.vm.network "forwarded_port", guest: 18181, host: 18181
-  config.vm.network "forwarded_port", guest: 8888, host: 18888
   config.vm.network "forwarded_port", guest: 22, host: 10022
 
   config.vm.provider "virtualbox" do |vbox|
