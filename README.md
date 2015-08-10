@@ -59,16 +59,10 @@ GitLab's default root password is "5iveL!fe". You should change this at the firs
 
 ### Project setup
 
-When you create a project on GitLab, You should create Jenkins job for Continuous Integration.
-I installed _GitLab Plugin_ on Jenkins that makes GitLab think Jenkins as GitLab CI.
+When you create a project on GitLab, GitLab CI automatically build your project for Continuous Integration.
 
 1. Create own project on GitLab.
-2. Create Job on Jenkins.
-3. Go to your project settings on GitLab project.
-4. Click _Service_ tab on left side.
-5. Click the _GitLab CI_.
-6. Click on _active_, Set random token, Set project url as Jenkins give
-(Project url is shown at _Build Triggers_ on Jenkins job configure).
+2. Enable GitLab CI on web console (http://localhost:18181/).
 
 
 ### Merge Request
