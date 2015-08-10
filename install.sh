@@ -16,10 +16,6 @@ fi
 echo 'millhouse' > /etc/hostname
 hostname -F /etc/hostname
 
-echo "Add jenkins repository."
-wget -qO- https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
-echo 'deb http://pkg.jenkins-ci.org/debian binary/' > /etc/apt/sources.list.d/jenkins.list
-
 echo "Install GitLab."
 curl -Lso /tmp/gitlab-ce.deb https://packages.gitlab.com/gitlab/gitlab-ce/packages/debian/wheezy/gitlab-ce_7.13.3-ce.1_amd64.deb/download
 dpkg -i /tmp/gitlab-ce.deb
@@ -36,18 +32,7 @@ echo "Update repository."
 apt-get update -qq
 
 echo "Install dependencies."
-DEBIAN_FRONTEND=nointeractive apt-get install -qq jenkins postfix openssh-server nis rpcbind
-
-echo "Setting jenkins."
-sed -e 's/HTTP_PORT=.*/HTTP_PORT=8888/' -i /etc/default/jenkins
-service jenkins restart
-until wget -qO /dev/null http://localhost:8888/; do
-    echo "Waiting..."
-    sleep 5
-done
-wget -qO /tmp/jenkins-cli.jar http://localhost:8888/jnlpJars/jenkins-cli.jar
-java -jar /tmp/jenkins-cli.jar -s http://localhost:8888/ install-plugin git gitlab-plugin docker-build-publish
-rm /tmp/jenkins-cli.jar
+DEBIAN_FRONTEND=nointeractive apt-get install -qq postfix openssh-server nis rpcbind
 
 echo "Setting NIS."
 sed -e 's/^NISSERVER=.*/NISSERVER=master/' -e 's/^NISCLIENT=.*/NISCLIENT=false/' -i /etc/default/nis
