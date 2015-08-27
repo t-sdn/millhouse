@@ -16,5 +16,5 @@ Vagrant.configure(2) do |config|
     vbox.cpus = 4
   end
 
-  config.vm.provision "shell", path: "./install.sh"
+  config.vm.provision "shell", path: "./install.sh", args: "#{ENV['HOSTNAME']}"
 end

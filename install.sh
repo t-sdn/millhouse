@@ -26,10 +26,10 @@ echo "Install dependencies."
 DEBIAN_FRONTEND=nointeractive apt-get install -qq gitlab-ce docker.io postfix openssh-server nis rpcbind
 
 echo "Setting GitLab."
-ip=$(curl -s ipv4.icanhazip.com)
-sed -e "s#^external_url .*#external_url 'http://$ip:10080'#" -i /etc/gitlab/gitlab.rb
-echo "gitlab_rails['gitlab_ssh_host'] = '$ip:10022'" >> /etc/gitlab/gitlab.rb
-echo "ci_external_url 'http://$ip:18181'" >> /etc/gitlab/gitlab.rb
+[ -n "$1" ] && HOSTNAME=$1 || HOSTNAME=$(curl -s ipv4.icanhazip.com)
+sed -e "s#^external_url .*#external_url 'http://$HOSTNAME:10080'#" -i /etc/gitlab/gitlab.rb
+echo "gitlab_rails['gitlab_ssh_host'] = '$HOSTNAME:10022'" >> /etc/gitlab/gitlab.rb
+echo "ci_external_url 'http://$HOSTNAME:18181'" >> /etc/gitlab/gitlab.rb
 
 gitlab-ctl reconfigure
 
