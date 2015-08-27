@@ -16,9 +16,14 @@ fi
 echo 'millhouse' > /etc/hostname
 hostname -F /etc/hostname
 
-echo "Install GitLab."
-curl -Lso /tmp/gitlab-ce.deb https://packages.gitlab.com/gitlab/gitlab-ce/packages/debian/wheezy/gitlab-ce_7.13.3-ce.1_amd64.deb/download
-dpkg -i /tmp/gitlab-ce.deb
+echo "Setup GitLab requirements."
+curl https://packages.gitlab.com/gpg.key | apt-key add -
+curl -Lo /etc/apt/sources.list.d/gitlab_gitlab-ce.list "https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/config_file.list?os=ubuntu&dist=trusty"
+echo "Update repository."
+apt-get update -qq
+
+echo "Install dependencies."
+DEBIAN_FRONTEND=nointeractive apt-get install -qq gitlab-ce docker.io postfix openssh-server nis rpcbind
 
 echo "Setting GitLab."
 ip=$(curl ipv4.icanhazip.com)
@@ -27,12 +32,6 @@ echo "gitlab_rails['gitlab_ssh_host'] = '$ip:10022'" >> /etc/gitlab/gitlab.rb
 echo "ci_external_url 'http://$ip:18181'" >> /etc/gitlab/gitlab.rb
 
 gitlab-ctl reconfigure
-
-echo "Update repository."
-apt-get update -qq
-
-echo "Install dependencies."
-DEBIAN_FRONTEND=nointeractive apt-get install -qq docker.io postfix openssh-server nis rpcbind
 
 echo "Setting GitLabCI service."
 cat > /etc/systemd/system/gitlab-ci-docker.service << EOF
