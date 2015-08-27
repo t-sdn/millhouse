@@ -17,8 +17,8 @@ echo 'millhouse' > /etc/hostname
 hostname -F /etc/hostname
 
 echo "Setup GitLab requirements."
-curl https://packages.gitlab.com/gpg.key | apt-key add -
-curl -Lo /etc/apt/sources.list.d/gitlab_gitlab-ce.list "https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/config_file.list?os=ubuntu&dist=trusty"
+curl -s https://packages.gitlab.com/gpg.key | apt-key add -
+curl -sLo /etc/apt/sources.list.d/gitlab_gitlab-ce.list "https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/config_file.list?os=ubuntu&dist=trusty"
 echo "Update repository."
 apt-get update -qq
 
@@ -26,7 +26,7 @@ echo "Install dependencies."
 DEBIAN_FRONTEND=nointeractive apt-get install -qq gitlab-ce docker.io postfix openssh-server nis rpcbind
 
 echo "Setting GitLab."
-ip=$(curl ipv4.icanhazip.com)
+ip=$(curl -s ipv4.icanhazip.com)
 sed -e "s#^external_url .*#external_url 'http://$ip:10080'#" -i /etc/gitlab/gitlab.rb
 echo "gitlab_rails['gitlab_ssh_host'] = '$ip:10022'" >> /etc/gitlab/gitlab.rb
 echo "ci_external_url 'http://$ip:18181'" >> /etc/gitlab/gitlab.rb
